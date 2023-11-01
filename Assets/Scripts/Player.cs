@@ -20,7 +20,7 @@ namespace Quinn
 		private void Start()
 		{
 			Cursor.visible = false;
-			Cursor.lockState = CursorLockMode.Locked;
+			Cursor.lockState = CursorLockMode.Confined;
 		}
 
 		private void OnMove(Vector2 vector)

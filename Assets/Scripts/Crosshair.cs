@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Quinn
 {
-    public class Crosshair : MonoBehaviour
+	public class Crosshair : MonoBehaviour
     {
 		[SerializeField]
 		private Transform Actor;

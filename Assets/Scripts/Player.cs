@@ -14,6 +14,8 @@ namespace Quinn
 			_input = GetComponent<InputReader>();
 			_movement = GetComponent<Movement>();
 
+			_input.OnPrimaryDown += OnPrimaryDown;
+			_input.OnPrimaryUp += OnPrimaryUp;
 			_input.OnMove += OnMove;
 		}
 
@@ -21,6 +23,16 @@ namespace Quinn
 		{
 			Cursor.visible = false;
 			Cursor.lockState = CursorLockMode.Confined;
+		}
+
+		private void OnPrimaryDown()
+		{
+			CrosshairManager.Instance.ChargeCast(1f);
+		}
+
+		private void OnPrimaryUp()
+		{
+			CrosshairManager.Instance.EndCast();
 		}
 
 		private void OnMove(Vector2 vector)

@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 2012752411812502142}
   - component: {fileID: 3932164740907909760}
   - component: {fileID: 7253835875148549463}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Projectile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -163,7 +163,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Settings:
+    Team: 0
     Speed: 8
+    MaxDistance: 20
+    Scale: 1
+    ScaleRate: 0
+    MinScale: 0
+    MaxScale: 1
+    DieWhenScaleZero: 0
     IsHoming: 0
     HomingTurnRate: 15
     HomingRange: 3

@@ -4,18 +4,15 @@ namespace Quinn
 {
 	[RequireComponent(typeof(InputReader))]
 	[RequireComponent(typeof(Movement))]
-	[RequireComponent(typeof(RangedAttack))]
 	public class Player : MonoBehaviour
 	{
 		private InputReader _input;
 		private Movement _movement;
-		private RangedAttack _ranged;
 
 		private void Awake()
 		{
 			_input = GetComponent<InputReader>();
 			_movement = GetComponent<Movement>();
-			_ranged = GetComponent<RangedAttack>();
 
 			_input.OnPrimaryDown += OnPrimaryDown;
 			_input.OnPrimaryUp += OnPrimaryUp;
@@ -30,7 +27,7 @@ namespace Quinn
 
 		private void OnPrimaryDown()
 		{
-			CrosshairManager.Instance.ChargeCast(1f);
+			CrosshairManager.Instance.ChargeCast(0.5f);
 		}
 
 		private void OnPrimaryUp()
@@ -39,7 +36,12 @@ namespace Quinn
 
 			if (manager.IsFullyCharged)
 			{
-				_ranged.FireAtCircle(transform.position, manager.CrosshairPosition, manager.CrosshairScale, ProjectileSettings.Default, 4);
+				var settings = new ProjectileSettings()
+				{
+					Team = Team.Player,
+					IsHoming = true
+				};
+				Projectile.SpawnTargetingCircle(transform.position, manager.CrosshairPosition, manager.CrosshairScale, settings, 1);
 			}
 
 			manager.EndCast();

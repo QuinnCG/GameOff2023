@@ -11,8 +11,11 @@ namespace Quinn
 		private float DefaultSize = 3f;
 
 		public Vector2 CrosshairPosition => _crosshair.transform.position;
+		public float CrosshairScale => _crosshair.transform.localScale.magnitude;
+		public bool IsFullyCharged => _fullChargeTime > -1f && Time.time > _fullChargeTime;
 
 		private Crosshair _crosshair;
+		private float _fullChargeTime = -1f;
 
 		private void Awake()
 		{
@@ -46,11 +49,13 @@ namespace Quinn
 		public void ChargeCast(float maxDuration)
 		{
 			_crosshair.StartCastCharge(maxDuration);
+			_fullChargeTime = Time.time + maxDuration;
 		}
 
 		public void EndCast()
 		{
 			_crosshair.EndCastCharge();
+			_fullChargeTime = -1f;
 		}
 	}
 }

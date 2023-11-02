@@ -6,6 +6,8 @@ namespace Quinn
 	[System.Serializable]
 	public class ProjectileSettings
 	{
+		public static ProjectileSettings Default { get; } = new();
+
 		public float Speed = 8f;
 
 		[Space, FoldoutGroup("Homing Settings")]

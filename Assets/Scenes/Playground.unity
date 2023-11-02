@@ -212,6 +212,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2234481595426084967, guid: b6b496655ca99c84fbb376e0362083b0, type: 3}
+      propertyPath: m_TagString
+      value: Player
+      objectReference: {fileID: 0}
     - target: {fileID: 3725118002532089606, guid: b6b496655ca99c84fbb376e0362083b0, type: 3}
       propertyPath: m_Name
       value: PlayerAndCamera

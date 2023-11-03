@@ -8,6 +8,7 @@ namespace Quinn
 	{
 		public static ProjectileSettings Default { get; } = new();
 
+		public string PrefabKey = "Projectile.prefab";
 		public Team Team = Team.None;
 
 		[Space]

@@ -1,18 +1,25 @@
-﻿using UnityEngine;
+﻿using Quinn.SpellSystem;
+using UnityEngine;
 
 namespace Quinn
 {
 	[RequireComponent(typeof(InputReader))]
 	[RequireComponent(typeof(Movement))]
+	[RequireComponent(typeof(Caster))]
 	public class Player : MonoBehaviour
 	{
+		[SerializeField]
+		private SpellDefinition Spell;
+
 		private InputReader _input;
 		private Movement _movement;
+		private Caster _caster;
 
 		private void Awake()
 		{
 			_input = GetComponent<InputReader>();
 			_movement = GetComponent<Movement>();
+			_caster = GetComponent<Caster>();
 
 			_input.OnPrimaryDown += OnPrimaryDown;
 			_input.OnPrimaryUp += OnPrimaryUp;
@@ -36,12 +43,15 @@ namespace Quinn
 
 			if (manager.IsFullyCharged)
 			{
-				var settings = new ProjectileSettings()
-				{
-					Team = Team.Player,
-					IsHoming = true
-				};
-				Projectile.SpawnTargetingCircle(transform.position, manager.CrosshairPosition, manager.CrosshairScale, settings, 1);
+				//var settings = new ProjectileSettings()
+				//{
+				//	Team = Team.Player,
+				//	IsHoming = true
+				//};
+				//Projectile.SpawnTargetingCircle(transform.position, manager.CrosshairPosition, manager.CrosshairScale, settings, 1);
+
+				_caster.Cast(Spell);
+				Debug.Log("Cast spell!");
 			}
 
 			manager.EndCast();

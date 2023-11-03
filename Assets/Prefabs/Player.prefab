@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 1435617789057500334}
   - component: {fileID: 7231379355434829459}
   - component: {fileID: 2729877027674930391}
-  - component: {fileID: 7355328601320541876}
+  - component: {fileID: 2124976435983220879}
   m_Layer: 6
   m_Name: Player
   m_TagString: Untagged
@@ -166,6 +166,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f28527c438bf9a843b1cabc3a8d74011, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Spell:
+    Fire: 1
+    Lightning: 0
+    Water: 0
+    Power: 1
+    Magnitude: 1
+    Stability: 1
+    Duplicity: 1
 --- !u!114 &7231379355434829459
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -191,7 +199,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <Speed>k__BackingField: 5
---- !u!114 &7355328601320541876
+--- !u!114 &2124976435983220879
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -200,6 +208,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 7123971578829282179}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dfee772b23db4b841acaa519a844d088, type: 3}
+  m_Script: {fileID: 11500000, guid: a44a8055f8c5de044a4fa84db072f511, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

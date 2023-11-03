@@ -6,28 +6,28 @@ namespace Quinn
 	[RequireComponent(typeof(Rigidbody2D))]
 	public class Projectile : MonoBehaviour
 	{
-		[SerializeField]
-		private ProjectileSettings Settings;
+		public System.Action<Collider2D> OnCollide;
+		public System.Action OnDestroyed;
 
 		private Rigidbody2D _rb;
 		private Vector2 _direction;
 		private Transform _homingTarget;
 
-		public static void SpawnWithDir(Vector2 origin, Vector2 rawDirection, ProjectileSettings settings)
+		private ProjectileSettings _settings;
+
+		public static Projectile SpawnWithDir(Vector2 origin, Vector2 rawDirection, ProjectileSettings settings)
 		{
-			Addressables.InstantiateAsync("Projectile.prefab", origin, Quaternion.identity).Completed += handle =>
+			var instance = Addressables.InstantiateAsync(settings.PrefabKey, origin, Quaternion.identity).WaitForCompletion();
+			var projectile = instance.GetComponent<Projectile>();
+
+			if (instance != null)
 			{
-				var instance = handle.Result;
+				projectile.transform.localScale = Vector3.one * settings.Scale;
+				projectile._direction = rawDirection.normalized;
+				projectile._settings = settings;
+			}
 
-				if (instance != null)
-				{
-					var projectile = instance.GetComponent<Projectile>();
-
-					projectile.transform.localScale = Vector3.one * settings.Scale;
-					projectile._direction = rawDirection.normalized;
-					projectile.Settings = settings;
-				}
-			};
+			return projectile;
 		}
 
 		public static void SpawnSingle(Vector2 origin, Vector2 target, ProjectileSettings settings)
@@ -55,8 +55,10 @@ namespace Quinn
 			}
 		}
 
-		public static void SpawnTargetingCircle(Vector2 origin, Vector2 target, float radius, ProjectileSettings settings, int count = 1)
+		public static Projectile[] SpawnTargetingCircle(Vector2 origin, Vector2 target, float radius, ProjectileSettings settings, int count = 1)
 		{
+			var projectiles = new Projectile[count];
+
 			for (int i = 0; i < count; i++)
 			{
 				Vector2 pos = Random.insideUnitCircle * radius / 2f;
@@ -65,50 +67,55 @@ namespace Quinn
 				var dir = pos - origin;
 				dir.Normalize();
 
-				SpawnWithDir(origin, dir, settings);
+				var proj = SpawnWithDir(origin, dir, settings);
+				projectiles[i] = proj;
 			}
+
+			return projectiles;
 		}
 
 		private void Start()
 		{
 			_rb = GetComponent<Rigidbody2D>();
-			Destroy(gameObject, Settings.MaxDistance / Settings.Speed);
+			Destroy(gameObject, _settings.MaxDistance / _settings.Speed);
 		}
 
 		private void OnTriggerEnter2D(Collider2D collision)
 		{
-			if (collision.gameObject.layer == LayerMask.NameToLayer("Obstacle"))
-			{
-				Debug.Log("Hit Obstacle!");
-			}
-			else if (collision.CompareTag("Enemy") && Settings.Team != Team.Enemy)
-			{
-				Debug.Log("Hit Enemy!");
-			}
-			else if (collision.CompareTag("Player") && Settings.Team != Team.Player)
-			{
-				Debug.Log("Hit Player!");
-			}
-			else if (Settings.Team == Team.None)
-			{
-				Debug.Log("Hit Something!");
-			}
-			else
-			{
-				return;
-			}
+			OnCollide?.Invoke(collision);
+			
+			//if (collision.gameObject.layer == LayerMask.NameToLayer("Obstacle"))
+			//{
+			//	Debug.Log("Hit Obstacle!");
+			//}
+			//else if (collision.CompareTag("Enemy") && Settings.Team != Team.Enemy)
+			//{
+			//	Debug.Log("Hit Enemy!");
+			//}
+			//else if (collision.CompareTag("Player") && Settings.Team != Team.Player)
+			//{
+			//	Debug.Log("Hit Player!");
+			//}
+			//else if (Settings.Team == Team.None)
+			//{
+			//	Debug.Log("Hit Something!");
+			//}
+			//else
+			//{
+			//	return;
+			//}
 
-			Destroy(gameObject);
+			//Destroy(gameObject);
 		}
 
 		private void Update()
 		{
-			if (Settings.ScaleRate != 0f)
+			if (_settings.ScaleRate != 0f)
 			{
-				transform.localScale += Time.deltaTime * Settings.ScaleRate * Vector3.one;
-				transform.localScale = Vector3.one * Mathf.Clamp(transform.localScale.magnitude, Settings.MinScale, Settings.MaxScale);
+				transform.localScale += Time.deltaTime * _settings.ScaleRate * Vector3.one;
+				transform.localScale = Vector3.one * Mathf.Clamp(transform.localScale.magnitude, _settings.MinScale, _settings.MaxScale);
 
-				if (Settings.DieWhenScaleZero && transform.localScale == Vector3.zero)
+				if (_settings.DieWhenScaleZero && transform.localScale == Vector3.zero)
 				{
 					Destroy(gameObject);
 				}
@@ -117,7 +124,7 @@ namespace Quinn
 
 		private void FixedUpdate()
 		{
-			if (Settings.IsHoming)
+			if (_settings.IsHoming)
 			{
 				if (_homingTarget == null)
 				{
@@ -138,19 +145,24 @@ namespace Quinn
 				}
 			}
 
-			_rb.velocity = _direction * Settings.Speed;
+			_rb.velocity = _direction * _settings.Speed;
+		}
+
+		private void OnDestroy()
+		{
+			OnDestroyed?.Invoke();
 		}
 
 		private Transform GetHomingTarget()
 		{
-			var colliders = Physics2D.OverlapCircleAll(transform.position, Settings.HomingRange);
+			var colliders = Physics2D.OverlapCircleAll(transform.position, _settings.HomingRange);
 			foreach (var collider in colliders)
 			{
-				if (collider.CompareTag("Player") && Settings.Team == Team.Enemy)
+				if (collider.CompareTag("Player") && _settings.Team == Team.Enemy)
 				{
 					return collider.transform;
 				}
-				if (collider.CompareTag("Enemy") && Settings.Team == Team.Player)
+				if (collider.CompareTag("Enemy") && _settings.Team == Team.Player)
 				{
 					return collider.transform;
 				}

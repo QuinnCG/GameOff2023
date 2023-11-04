@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using Unity.Services.Authentication;
+using Unity.Services.Core;
+using UnityEngine;
 using UnityEngine.AddressableAssets;
 
 namespace Quinn
@@ -14,9 +16,12 @@ namespace Quinn
 			DontDestroyOnLoad(instance);
 		}
 
-		private void Awake()
+		private async void Awake()
 		{
 			Instance = this;
+
+			await UnityServices.InitializeAsync();
+			await AuthenticationService.Instance.SignInAnonymouslyAsync();
 		}
 	}
 }

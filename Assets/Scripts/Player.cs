@@ -43,15 +43,7 @@ namespace Quinn
 
 			if (manager.IsFullyCharged)
 			{
-				//var settings = new ProjectileSettings()
-				//{
-				//	Team = Team.Player,
-				//	IsHoming = true
-				//};
-				//Projectile.SpawnTargetingCircle(transform.position, manager.CrosshairPosition, manager.CrosshairScale, settings, 1);
-
 				_caster.Cast(Spell);
-				Debug.Log("Cast spell!");
 			}
 
 			manager.EndCast();

@@ -33,13 +33,12 @@ namespace Quinn.SpellSystem
 			{
 				return typeof(FireMissile);
 			}
+			else if (Lightning > Fire && Lightning > Water)
+			{
+				return typeof(LightningMissile);
+			}
 
-			throw new NotImplementedException();
-
-			//else if (Lightning > Fire && Lightning > Water)
-			//{
-			//	return typeof(LightingMissile);
-			//}
+			return typeof(object);
 			//else if (Water > Lightning && Water > Fire)
 			//{
 			//	return typeof(WaterMissile);

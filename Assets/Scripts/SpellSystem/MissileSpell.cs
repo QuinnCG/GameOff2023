@@ -10,14 +10,27 @@ namespace Quinn.SpellSystem
 		protected int ProjectilesAlive { get; set; }
 		protected bool KillSpellWhenNoProjectiles { get; set; } = true;
 
-		protected int ProjectileCount => Mathf.RoundToInt(Definition.Duplicity);
-		protected float ProjectileSize => Definition.Magnitude / ProjectileCount * BaseProjectileSize;
-		protected float ProjectileSpeed => Definition.Power / ProjectileSize * BaseProjectileSpeed;
+		protected virtual int GetProjectileCount()
+		{
+			return Mathf.RoundToInt(Definition.Duplicity);
+		}
+
+		protected virtual float GetProjectileSize()
+		{
+			return Definition.Magnitude / GetProjectileCount() * BaseProjectileSize;
+		}
+
+		protected virtual float GetProjectileSpeed()
+		{
+			return Definition.Power / (GetProjectileSize() * 1.3f) * BaseProjectileSpeed;
+		}
 
 		public override void OnCast()
 		{
-			SpawnProjectilesAtCrosshair(GetProjectileSettings(), ProjectileCount);
+			SpawnProjectilesAtCrosshair(GetProjectileSettings(), GetProjectileCount());
 		}
+
+		protected virtual void OnProjectileSpawn(Projectile projectile) { }
 
 		protected Projectile[] SpawnProjectilesAtCrosshair(ProjectileSettings settings, int count = 1)
 		{
@@ -29,6 +42,7 @@ namespace Quinn.SpellSystem
 			foreach (var projectile in projectiles)
 			{
 				projectile.OnCollide += collider => OnProjectileCollide(projectile, collider);
+				OnProjectileSpawn(projectile);
 
 				// Count number of alive projectiles, destory spell when none are left.
 				ProjectilesAlive++;
@@ -53,17 +67,21 @@ namespace Quinn.SpellSystem
 		{
 			return new ProjectileSettings()
 			{
-				Scale = ProjectileSize,
-				Speed = ProjectileSpeed
+				Scale = GetProjectileSize(),
+				Speed = GetProjectileSpeed()
 			};
 		}
 
-		protected virtual void OnProjectileCollide(Projectile projectile, Collider2D collider)
+		/// <returns>Whether or not the projectile is destroyed.</returns>
+		protected virtual bool OnProjectileCollide(Projectile projectile, Collider2D collider)
 		{
 			if (collider.CompareTag("Enemy") || collider.gameObject.layer == LayerMask.NameToLayer("Obstacle"))
 			{
 				Object.Destroy(projectile.gameObject);
+				return true;
 			}
+
+			return false;
 		}
 	}
 }

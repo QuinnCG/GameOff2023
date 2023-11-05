@@ -7,6 +7,16 @@ namespace Quinn.SpellSystem
 {
 	public class LightningMissile : MissileSpell
 	{
+		protected int GetMaxChainStrikes()
+		{
+			return 25;
+		}
+
+		protected float GetChainStrikeRadius()
+		{
+			return 0.5f;
+		}
+
 		protected override void OnProjectileSpawn(Projectile projectile) { }
 
 		public override void OnCast()
@@ -40,67 +50,70 @@ namespace Quinn.SpellSystem
 			float targetDst = Vector2.Distance(Player.transform.position, target);
 
 			float maxDistance = 12f;
-			//target = targetDir * Mathf.Min(targetDst, maxDistance);
-			//target += (Vector2)Player.transform.position;
+			target = targetDir * Mathf.Min(targetDst, maxDistance);
+			target += (Vector2)Player.transform.position;
 
-			SpawnLightning(Player.transform.position, target, attach: true);
+			SpawnLightning(Player.transform.position, target, parent: Player.transform);
 			ChainStrike(target, new List<Damage>() { closest });
 		}
 
-		private void SpawnLightning(Vector2 start, Vector2 end, bool attach = false)
+		private void SpawnLightning(Vector2 start, Vector2 end, Transform parent = null)
 		{
 			var raycasts = Physics2D.LinecastAll(start, end);
 			foreach (var raycast in raycasts)
 			{
-				if (raycast.collider.TryGetComponent(out Damage damage) && !raycast.collider.CompareTag("Player"))
+				if (raycast.collider.TryGetComponent(out Damage damage)
+					&& !raycast.collider.CompareTag("Player")
+					&& !raycast.collider.CompareTag("Enemy")
+					&& !raycast.collider.transform != parent)
 				{
-					//end = damage.GetComponent<Collider2D>().bounds.center;
+					end = damage.GetComponent<Collider2D>().bounds.center;
 					break;
 				}
 			}
 
+			// Orignally, this didn't use WaitForCompletion(). Instead if simply did all relavent setup via a callback.
+			// This resulted in some weird issues with all but the first lightning strike working properly.
 			string key = "LightningMissile.prefab";
-			Addressables.InstantiateAsync(key, start, Quaternion.identity).Completed += handle =>
+			var instance = Addressables.InstantiateAsync(key, start, Quaternion.identity).WaitForCompletion();
+			var vfx = instance.GetComponent<VisualEffect>();
+
+			vfx.SetVector2("Target", end);
+			Object.Destroy(instance, 1f);
+
+			if (parent != null)
 			{
-				var instance = handle.Result;
-				if (instance == null) return;
-
-				var vfx = instance.GetComponent<VisualEffect>();
-
-				vfx.SetVector2("Target", end);
-				Object.Destroy(instance, 1f);
-
-				if (attach)
-				{
-					instance.transform.parent = Player.transform;
-				}
-
-				Debug.DrawLine(start, end, Color.yellow, 5f);
-			};
+				instance.transform.parent = parent;
+			}
 		}
 
 		private void ChainStrike(Vector2 origin, List<Damage> targets)
 		{
 			var positions = new List<Vector2>();
-			var colliders = Physics2D.OverlapCircleAll(origin, 5f);
+			var colliders = Physics2D.OverlapCircleAll(origin, 2f);
 
 			foreach (var collider in colliders)
 			{
 				if (collider.TryGetComponent(out Damage damage)
-					&& !collider.CompareTag("Player")
-					&& !targets.Contains(damage))
+					&& !targets.Contains(damage)
+					&& !collider.CompareTag("Player"))
 				{
 					Vector2 end = collider.GetComponent<Collider2D>().bounds.center;
-					SpawnLightning(origin, end);
+					SpawnLightning(origin, end, parent: damage.transform);
 
 					targets.Add(damage);
 					positions.Add(end);
 				}
 			}
 
-			foreach (var pos in positions)
+			if (targets.Count < GetMaxChainStrikes())
 			{
-				ChainStrike(pos, targets);
+				// The follow up chain strikes must be kept seperate from the above for loop.
+				// This is because the "targets" list should be fully updated before calling any more chain strikes.
+				foreach (var pos in positions)
+				{
+					ChainStrike(pos, targets);
+				}
 			}
 		}
 	}

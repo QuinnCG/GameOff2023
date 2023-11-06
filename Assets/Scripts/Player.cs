@@ -15,13 +15,14 @@ namespace Quinn
 		private Movement _movement;
 		private Caster _caster;
 
+		private bool _isCharging;
+
 		private void Awake()
 		{
 			_input = GetComponent<InputReader>();
 			_movement = GetComponent<Movement>();
 			_caster = GetComponent<Caster>();
 
-			_input.OnPrimaryDown += OnPrimaryDown;
 			_input.OnPrimaryUp += OnPrimaryUp;
 			_input.OnMove += OnMove;
 		}
@@ -32,9 +33,13 @@ namespace Quinn
 			Cursor.lockState = CursorLockMode.Confined;
 		}
 
-		private void OnPrimaryDown()
+		private void Update()
 		{
-			CrosshairManager.Instance.ChargeCast(0.5f);
+			if (_input.IsPrimaryDown && !_isCharging && !_caster.IsExclusiveSpellActive)
+			{
+				_isCharging = true;
+				CrosshairManager.Instance.ChargeCast(0.5f);
+			}
 		}
 
 		private void OnPrimaryUp()
@@ -47,6 +52,7 @@ namespace Quinn
 			}
 
 			manager.EndCast();
+			_isCharging = false;
 		}
 
 		private void OnMove(Vector2 vector)

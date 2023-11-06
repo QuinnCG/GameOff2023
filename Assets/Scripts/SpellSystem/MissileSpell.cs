@@ -7,6 +7,9 @@ namespace Quinn.SpellSystem
 		public const float BaseProjectileSize = 0.5f;
 		public const float BaseProjectileSpeed = 8f;
 
+		public bool IsExclusive { get; protected set; }
+		public System.Action OnSpellLoseExclusivity { get; set; }
+
 		protected int ProjectilesAlive { get; set; }
 		protected bool KillSpellWhenNoProjectiles { get; set; } = true;
 

@@ -37,12 +37,12 @@ namespace Quinn.SpellSystem
 			{
 				return typeof(LightningMissile);
 			}
+			else if (Water > Lightning && Water > Fire)
+			{
+				return typeof(WaterMissile);
+			}
 
-			return typeof(object);
-			//else if (Water > Lightning && Water > Fire)
-			//{
-			//	return typeof(WaterMissile);
-			//}
+			throw new Exception();
 		}
 	}
 }

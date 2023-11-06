@@ -5,6 +5,8 @@ namespace Quinn.SpellSystem
 {
 	public class Caster : MonoBehaviour
 	{
+		public bool IsExclusiveSpellActive { get; private set; }
+
 		public void Cast(SpellDefinition definition)
 		{
 			var spell = (Spell)Activator.CreateInstance(definition.GetSpellType());
@@ -12,6 +14,16 @@ namespace Quinn.SpellSystem
 
 			SpellManager.Instance.RegisterSpell(spell);
 			spell.OnCast();
+
+			if (spell is MissileSpell missile && missile.IsExclusive)
+			{
+				IsExclusiveSpellActive = true;
+
+				missile.OnSpellLoseExclusivity += () =>
+				{
+					IsExclusiveSpellActive = false;
+				};
+			}
 		}
 	}
 }

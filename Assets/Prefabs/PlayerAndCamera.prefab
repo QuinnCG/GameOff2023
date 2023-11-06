@@ -439,8 +439,12 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1435617789057500334, guid: b7f53216828c11c468c3d67752995cd8, type: 3}
-      propertyPath: Spell.Lightning
+      propertyPath: Spell.Water
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1435617789057500334, guid: b7f53216828c11c468c3d67752995cd8, type: 3}
+      propertyPath: Spell.Lightning
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7123971578829282179, guid: b7f53216828c11c468c3d67752995cd8, type: 3}
       propertyPath: m_Name

@@ -10,8 +10,12 @@ namespace Quinn
 		public Action OnRoll;
 		public Action<Vector2> OnMove;
 
+		public bool IsPrimaryDown { get; private set; }
+
 		private void Update()
 		{
+			IsPrimaryDown = Input.GetMouseButton(0);
+
 			if (Input.GetMouseButtonDown(0))
 			{
 				OnPrimaryDown?.Invoke();

@@ -355,7 +355,7 @@ MonoBehaviour:
   m_Follow: {fileID: 8146267051180120591}
   m_Lens:
     FieldOfView: 34
-    OrthographicSize: 8
+    OrthographicSize: 6
     NearClipPlane: 0.3
     FarClipPlane: 1000
     Dutch: 0
@@ -436,15 +436,39 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1435617789057500334, guid: b7f53216828c11c468c3d67752995cd8, type: 3}
       propertyPath: Spell.Fire
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1435617789057500334, guid: b7f53216828c11c468c3d67752995cd8, type: 3}
       propertyPath: Spell.Water
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1435617789057500334, guid: b7f53216828c11c468c3d67752995cd8, type: 3}
       propertyPath: Spell.Lightning
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2308105313831829606, guid: b7f53216828c11c468c3d67752995cd8, type: 3}
+      propertyPath: m_Size.x
+      value: 0.7389311
+      objectReference: {fileID: 0}
+    - target: {fileID: 2308105313831829606, guid: b7f53216828c11c468c3d67752995cd8, type: 3}
+      propertyPath: m_Size.y
+      value: 0.5221203
+      objectReference: {fileID: 0}
+    - target: {fileID: 2308105313831829606, guid: b7f53216828c11c468c3d67752995cd8, type: 3}
+      propertyPath: m_Offset.x
+      value: -0.031250093
+      objectReference: {fileID: 0}
+    - target: {fileID: 2308105313831829606, guid: b7f53216828c11c468c3d67752995cd8, type: 3}
+      propertyPath: m_Offset.y
+      value: 0.26105806
+      objectReference: {fileID: 0}
+    - target: {fileID: 2308105313831829606, guid: b7f53216828c11c468c3d67752995cd8, type: 3}
+      propertyPath: m_Direction
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2729877027674930391, guid: b7f53216828c11c468c3d67752995cd8, type: 3}
+      propertyPath: <Speed>k__BackingField
+      value: 6.5
       objectReference: {fileID: 0}
     - target: {fileID: 7123971578829282179, guid: b7f53216828c11c468c3d67752995cd8, type: 3}
       propertyPath: m_Name

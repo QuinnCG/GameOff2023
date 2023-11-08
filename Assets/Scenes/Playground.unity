@@ -859,10 +859,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 951772203495547239, guid: b6b496655ca99c84fbb376e0362083b0, type: 3}
+      propertyPath: orthographic size
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 3725118002532089606, guid: b6b496655ca99c84fbb376e0362083b0, type: 3}
       propertyPath: m_Name
       value: PlayerAndCamera
       objectReference: {fileID: 0}
+    - target: {fileID: 4855124760046194812, guid: b6b496655ca99c84fbb376e0362083b0, type: 3}
+      propertyPath: Roll
+      value: 
+      objectReference: {fileID: -6858413914681953895, guid: a7d9b04ae9abb624ca5cf94ad4081231, type: 3}
     - target: {fileID: 8223889661235934908, guid: b6b496655ca99c84fbb376e0362083b0, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

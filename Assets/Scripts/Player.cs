@@ -1,4 +1,5 @@
 ﻿using Quinn.SpellSystem;
+using System;
 using UnityEngine;
 
 namespace Quinn
@@ -6,6 +7,7 @@ namespace Quinn
 	[RequireComponent(typeof(InputReader))]
 	[RequireComponent(typeof(Movement))]
 	[RequireComponent(typeof(Caster))]
+	[RequireComponent(typeof(PlayerAnimator))]
 	public class Player : MonoBehaviour
 	{
 		[SerializeField]
@@ -14,6 +16,7 @@ namespace Quinn
 		private InputReader _input;
 		private Movement _movement;
 		private Caster _caster;
+		private PlayerAnimator _animator;
 
 		private bool _isCharging;
 
@@ -22,9 +25,11 @@ namespace Quinn
 			_input = GetComponent<InputReader>();
 			_movement = GetComponent<Movement>();
 			_caster = GetComponent<Caster>();
+			_animator = GetComponent<PlayerAnimator>();
 
 			_input.OnPrimaryUp += OnPrimaryUp;
 			_input.OnMove += OnMove;
+			_input.OnRoll += OnRoll;
 		}
 
 		private void Start()
@@ -58,6 +63,12 @@ namespace Quinn
 		private void OnMove(Vector2 vector)
 		{
 			_movement.Move(vector);
+			_animator.IsMoving = vector.magnitude > 0f;
+		}
+
+		private void OnRoll()
+		{
+			_animator.PlayRoll();
 		}
 	}
 }

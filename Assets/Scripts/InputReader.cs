@@ -25,7 +25,10 @@ namespace Quinn
 				OnPrimaryUp?.Invoke();
 			}
 
-			if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.LeftControl))
+			if (Input.GetKeyDown(KeyCode.Space)
+				|| Input.GetKeyDown(KeyCode.LeftShift)
+				|| Input.GetKeyDown(KeyCode.LeftControl)
+				|| Input.GetMouseButtonDown(1))
 			{
 				OnRoll?.Invoke();
 			}
